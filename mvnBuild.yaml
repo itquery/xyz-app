@@ -1,0 +1,16 @@
+--- 
+- 
+  hosts: localhost
+  tasks: 
+    - 
+      apt: 
+        name: "{{ packages }}"
+        state: present
+      become: true
+      name: "maven check  and install"
+      vars: 
+        packages: 
+          - maven
+    - 
+      name: "maven clean and install"
+      command: "mvn -f ./pom.xml clean install"
