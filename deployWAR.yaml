@@ -1,0 +1,25 @@
+- name: Deployment of war file
+  hosts: appseerver
+  become: yes
+  become_method: sudo
+  vars:
+     build_warfile: /root/workspace/myproject/target/myproject.war
+     remote_webapps: /usr/share/tomcat/webapps/
+
+  tasks:
+    - name: tomcat stop
+      service: name=tomcat state=stopped
+
+    - name: delete war directories in tomcat webapps
+      file: path=/usr/share/tomcat/webapps/myproject.war state=absent
+
+    - name: delete war file in tomcat webapps
+      file: path=/usr/share/tomcat/webapps/myproject state=absent
+
+    - name: copy war file
+      command: cp {{build_warfile}} {{remote_webapps}}
+      notify: start tomcat
+
+  handlers:
+    - name: start tomcat
+      service: name=tomcat state=started
