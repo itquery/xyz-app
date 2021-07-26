@@ -1,25 +1,20 @@
-- name: Deployment of war file
+---
+-  
   hosts: appservers
   become: yes
   become_method: sudo
-  vars:
-     build_warfile: /var/lib/jenkins/workspace/App-Build-Deploy/target/myproject.war
-     remote_webapps: /usr/share/tomcat/webapps/
 
   tasks:
     - name: tomcat stop
-      service: name=tomcat state=stopped
+      service: name=tomcat8 state=stopped
 
-    - name: delete war directories in tomcat webapps
-      file: path=/usr/share/tomcat/webapps/myproject.war state=absent
-
-    - name: delete war file in tomcat webapps
-      file: path=/usr/share/tomcat/webapps/myproject state=absent
-
-    - name: copy war file
-      command: cp {{build_warfile}} {{remote_webapps}}
+    - name: Copying the local app.war file on remote
+      become: true
+      copy:
+        src: /var/lib/jenkins/workspace/App-Build-Deploy/target/app.war
+        dest: /var/lib/tomcat8/webapps/
       notify: start tomcat
 
   handlers:
     - name: start tomcat
-      service: name=tomcat state=started
+      service: name=tomcat8 state=started
