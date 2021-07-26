@@ -8,6 +8,9 @@
     - name: tomcat stop
       service: name=tomcat8 state=stopped
 
+    - name: delete war file in tomcat webapps
+      file: path=/var/lib/tomcat8/webapps/app.war
+
     - name: Copying the local app.war file on remote
       become: true
       copy:
