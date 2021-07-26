@@ -1,9 +1,9 @@
 - name: Deployment of war file
-  hosts: appseerver
+  hosts: appserver
   become: yes
   become_method: sudo
   vars:
-     build_warfile: /root/workspace/myproject/target/myproject.war
+     build_warfile: /var/lib/jenkins/workspace/App-Build-Deploy/target/myproject.war
      remote_webapps: /usr/share/tomcat/webapps/
 
   tasks:
